@@ -38,15 +38,15 @@ public class LoginRegisterPanel {
         RegisterButton.addActionListener(e -> {
             backButton.setVisible(true);
             createRegisterPanel();
-        });//Register sayfasina gider
+        });//Goes to the Register page
         passwordShowCheckBox1.addActionListener(e -> {
             JCheckBox checkBox = (JCheckBox) e.getSource();
             passwordLoginField.setEchoChar(checkBox.isSelected() ? '\0' : '•');
-        });// Giriş yapma ekranında şifre gösterme
+        });// Show the password on the login screen
         passwordShowCheckBox.addActionListener(e -> {
             JCheckBox checkBox = (JCheckBox) e.getSource();
             passwordRegField.setEchoChar(checkBox.isSelected() ? '\0' : '•');
-        });//Kayıt olma yerinde Şifre Gösterme
+        });//Show the password on the registration form
         createAccountButton.addActionListener(e -> {
             parentPanel.removeAll();
             parentPanel.add(InputPanel);
@@ -54,10 +54,10 @@ public class LoginRegisterPanel {
             parentPanel.revalidate();
             warningLabel.setVisible(false);
 
-            // E-posta kontrolü
+            // Email check
             boolean emailExists = customer.isEmailExists(emailRegField.getText());
 
-            // Kullanıcı giriş doğrulaması
+            // User input validation
             String stringPassword = new String(passwordRegField.getPassword());
             String status = customer.checkInfos(
                     nameField.getText(),
@@ -69,7 +69,7 @@ public class LoginRegisterPanel {
 
             if (Objects.equals(status, "")) {
                 if (!emailExists) {
-                    // Telefon numarasını temizle ve kaydet
+                    // Clean up the phone number and save
                     String cleanedNumber = numberField.getText().replaceAll("[^0-9]", "");
                     customer.takeInfos(
                             nameField.getText(),
@@ -78,7 +78,7 @@ public class LoginRegisterPanel {
                             emailRegField.getText(),
                             stringPassword
                     );
-                    // Tüm giriş alanlarını temizle
+                    // Clear all input fields
                     nameField.setText("");
                     surnameField.setText("");
                     numberField.setText("");
@@ -87,36 +87,36 @@ public class LoginRegisterPanel {
 
                     JOptionPane.showMessageDialog(createAccountButton, "Your Account Created!");
                 } else {
-                    // E-posta zaten kayıtlı
+                    // Email is already registered
                     createRegisterPanel();
                     warningLabel.setText("E-Mail already exist");
                     warningLabel.setVisible(true);
                 }
             } else {
-                // Kullanıcı giriş doğrulaması başarısız
+                // User input validation failed
                 createRegisterPanel();
                 warningLabel.setText(status);
                 warningLabel.setVisible(true);
             }
-        });//Kayıt ol butonuna basınca ana giriş ekranına atıyor. Eğer geçerli bir e postaysa
+        });//When the Register button is pressed, returns to the main login screen if the email is valid
         LoginButton.addActionListener(e -> {
             StringBuilder passwordText = new StringBuilder();
             for (char item : getPasswordLoginField()) {
-                passwordText.append(item); // Kullanıcı şifresini al
+                passwordText.append(item); // Get the user's password
             }
 
-            emailText = emailLogField.getText(); // Kullanıcı e-posta adresini al
-            String password = passwordText.toString(); // Şifreyi String olarak al
+            emailText = emailLogField.getText(); // Get the user's email address
+            String password = passwordText.toString(); // Get the password as a String
 
-            // Kullanıcı doğrulaması için customer nesnesini kullan
-            customer.readFile(emailText, password); // Veritabanından doğrulama işlemi
+            // Use the customer object to authenticate the user
+            customer.readFile(emailText, password); // Authenticate against the database
 
-            // Doğrulama başarılıysa kullanıcı ID'sini al
+            // If authentication succeeds, get the user ID
             innerAppPanel.userId = customer.userId;
 
             if (customer.isReadFileStat()) {
-                // Giriş başarılıysa yeni paneli aç
-                closeAllFrames(); // Tüm mevcut pencereleri kapat
+                // If login succeeds, open the new panel
+                closeAllFrames(); // Close all open windows
                 JFrame frame = new JFrame("innerAppPanel");
                 frame.setContentPane(new innerAppPanel(innerAppPanel.userId).mainPanel1);
                 frame.setPreferredSize(new Dimension(1250, 800));
@@ -125,10 +125,10 @@ public class LoginRegisterPanel {
                 frame.setLocationRelativeTo(null);
                 frame.setVisible(true);
             } else {
-                // E-posta veya şifre yanlışsa hata mesajı göster
+                // Show an error message if the email or password is incorrect
                 JOptionPane.showMessageDialog(createAccountButton, "Mail or Password is incorrect!");
             }
-        });// Burada veritabanindan yazılan verilerin doğru olup olmadığını kontrol ediyoruz doğruysa ana ekrana atıyor yanlışsa
+        });// Checks the entered credentials against the database; if they are correct, goes to the main screen, otherwise shows an error message
         backButton.addActionListener(e-> {
             parentPanel.removeAll();
             parentPanel.add(InputPanel);
@@ -136,7 +136,7 @@ public class LoginRegisterPanel {
             parentPanel.revalidate();
             warningLabel.setVisible(false);
             backButton.setVisible(false);
-        });// Login sayfasina gider
+        });// Goes to the Login page
     }
     public void createRegisterPanel() {
         parentPanel.removeAll();
@@ -159,8 +159,8 @@ public class LoginRegisterPanel {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-    }//Logo fotoğrafımız
-    static void closeAllFrames() {//ana paneli kapatmak için metot
+    }//Our logo image
+    static void closeAllFrames() {//Method to close the main panel
         Frame[] frames = Frame.getFrames();
         for (Frame frame : frames) {
             if (frame instanceof JFrame) {

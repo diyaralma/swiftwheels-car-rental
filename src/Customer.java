@@ -16,12 +16,12 @@ public class Customer {
     public Customer() {} // Empty constructor
 
     public String checkInfos(String name, String surname, String number, String mail, String password) {
-        String status = ""; // Hic bir sorun yoksa bosluk doner
+        String status = ""; // Returns an empty string if there are no problems
         if (Objects.equals(name, "") || Objects.equals(surname, "") || Objects.equals(number, "") ||
                 Objects.equals(mail, "") || Objects.equals(password, "")) {
-            return "Hicbir Bolum Bos Birakilmamali !!";
+            return "All Fields Must Be Filled In !!";
         } else if (!(mail.contains("@") && mail.endsWith(".com"))) {
-            return "Yanlis Mail Yazimi !!";
+            return "Invalid Email Format !!";
         }
         return status;
     }
@@ -99,7 +99,7 @@ public class Customer {
 
         try (Connection conn = createConnection();
              PreparedStatement stmt = conn.prepareStatement(deleteSQL)) {
-            stmt.setInt(1, userId); // Kullanıcı ID'sini bağla
+            stmt.setInt(1, userId); // Bind the user ID
             stmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error while deleting data: " + e.getMessage());
@@ -111,7 +111,7 @@ public class Customer {
 
         try (Connection conn = createConnection();
              PreparedStatement pstmt = conn.prepareStatement(selectSQL)) {
-            pstmt.setInt(1, userId); // Kullanıcı ID'sine göre sorgu
+            pstmt.setInt(1, userId); // Query by user ID
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
@@ -141,12 +141,12 @@ public class Customer {
             stmt.setInt(1, userId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1) == 0; // Eğer sonuç 0 ise hesap silinmiş demektir
+                return rs.getInt(1) == 0; // A result of 0 means the account has been deleted
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false; // Hata durumunda silinmedi olarak kabul et
+        return false; // On error, treat the account as not deleted
     }
 
     public boolean isEmailExists(String email) {
@@ -159,7 +159,7 @@ public class Customer {
             stmt.setString(1, email);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    emailExists = rs.getInt(1) > 0; // Eğer sonuç 0'dan büyükse e-posta kayıtlı
+                    emailExists = rs.getInt(1) > 0; // A result greater than 0 means the email is already registered
                 }
             }
         } catch (SQLException ex) {

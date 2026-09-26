@@ -28,25 +28,25 @@ public class Jeep extends Vehicle {
             if (rs.next()) {
                 return new Jeep(
                         rs.getInt("id"),
-                        rs.getString("detail1"),               // Seri
-                        rs.getString("detail2"),               // Yakıt tipi
-                        rs.getString("detail3"),           // Çekiş türü
-                        rs.getString("make"),               // Marka
+                        rs.getString("detail1"),               // Serial
+                        rs.getString("detail2"),               // Fuel type
+                        rs.getString("detail3"),           // Drive type
+                        rs.getString("make"),               // Make
                         rs.getString("model"),              // Model
-                        rs.getInt("year"),                  // Üretim yılı
-                        rs.getInt("km"),                    // Kilometre
-                        rs.getString("color"),              // Renk
-                        rs.getString("engine_power"),       // Motor gücü
-                        rs.getString("engine_capacity"),    // Motor kapasitesi
-                        rs.getInt("price"),                 // Fiyat
-                        rs.getInt("stock")                  // Stok miktarı
+                        rs.getInt("year"),                  // Production year
+                        rs.getInt("km"),                    // Kilometers
+                        rs.getString("color"),              // Color
+                        rs.getString("engine_power"),       // Engine power
+                        rs.getString("engine_capacity"),    // Engine capacity
+                        rs.getInt("price"),                 // Price
+                        rs.getInt("stock")                  // Stock quantity
                 );
             }
 
         } catch (SQLException e) {
-            System.err.println("Jeep alınırken hata oluştu: " + e.getMessage());
+            System.err.println("Error while fetching jeep: " + e.getMessage());
         }
-        return null; // Eğer jeep bulunamazsa null döndür
+        return null; // Return null if the jeep is not found
     }
     public ArrayList<Jeep> getAllJeeps() {
         ArrayList<Jeep> jeepList = new ArrayList<>();
@@ -57,26 +57,26 @@ public class Jeep extends Vehicle {
              ResultSet rs = stmt.executeQuery(query)) {
 
             while (rs.next()) {
-                // Jeep nesnesi oluştur ve listeye ekle
+                // Create a Jeep object and add it to the list
                 jeepList.add(new Jeep(
                         rs.getInt("id"),                 // ID
-                        rs.getString("detail1"),            // Seri
-                        rs.getString("detail2"),            // Yakıt Türü
-                        rs.getString("detail3"),        // Çekiş Sistemi
-                        rs.getString("make"),            // Marka
+                        rs.getString("detail1"),            // Serial
+                        rs.getString("detail2"),            // Fuel Type
+                        rs.getString("detail3"),        // Drive System
+                        rs.getString("make"),            // Make
                         rs.getString("model"),           // Model
-                        rs.getInt("year"),               // Üretim Yılı
-                        rs.getInt("km"),                 // Kilometre
-                        rs.getString("color"),           // Renk
-                        rs.getString("engine_power"),    // Motor Gücü
-                        rs.getString("engine_capacity"), // Motor Kapasitesi
-                        rs.getInt("price"),              // Fiyat
-                        rs.getInt("stock")               // Stok Miktarı
+                        rs.getInt("year"),               // Production Year
+                        rs.getInt("km"),                 // Kilometers
+                        rs.getString("color"),           // Color
+                        rs.getString("engine_power"),    // Engine Power
+                        rs.getString("engine_capacity"), // Engine Capacity
+                        rs.getInt("price"),              // Price
+                        rs.getInt("stock")               // Stock Quantity
                 ));
             }
 
         } catch (SQLException e) {
-            System.err.println("Jeepler alınırken hata oluştu: " + e.getMessage());
+            System.err.println("Error while fetching jeeps: " + e.getMessage());
         }
 
         return jeepList;
@@ -116,10 +116,10 @@ public class Jeep extends Vehicle {
             stmt.setString(13, traction.getText());
 
             stmt.executeUpdate();
-            System.out.println("Jeep başarıyla güncellendi.");
+            System.out.println("Jeep updated successfully.");
 
         } catch (SQLException e) {
-            System.err.println("Jeep güncellenirken hata oluştu: " + e.getMessage());
+            System.err.println("Error while updating jeep: " + e.getMessage());
         }
     }
     public void addJeepToDB(
@@ -145,14 +145,14 @@ public class Jeep extends Vehicle {
             stmt.setString(12, traction);
 
             stmt.executeUpdate();
-            System.out.println("Jeep başarıyla eklendi.");
+            System.out.println("Jeep added successfully.");
         } catch (SQLException e) {
-            System.err.println("Jeep eklenirken hata oluştu: " + e.getMessage());
+            System.err.println("Error while adding jeep: " + e.getMessage());
         }
     }
     @Override
     void addToList() {}
-    // Getter ve Setter Metotları
+    // Getter and Setter Methods
     public String getSerial() { return serial; }
     public String getFuel() { return fuel; }
     public String getTraction() { return traction; }

@@ -182,7 +182,7 @@
                 <properties>
                   <font name="DialogInput" size="28"/>
                   <foreground color="-16777216"/>
-                  <text value="Kalitenin tek adresi"/>
+                  <text value="The only address for quality"/>
                 </properties>
               </component>
               <component id="5833b" class="javax.swing.JLabel" binding="homeLogo" custom-create="true">
@@ -200,7 +200,7 @@
                 <properties>
                   <font name="DialogInput" size="12"/>
                   <foreground color="-16777216"/>
-                  <text value="   E - MAİL : SwiftWheels@gazi.edu.tr"/>
+                  <text value="   E - MAIL : SwiftWheels@gazi.edu.tr"/>
                 </properties>
               </component>
               <component id="88ba2" class="javax.swing.JLabel" binding="phoneLogo" custom-create="true">
@@ -220,7 +220,7 @@
                 <properties>
                   <font name="DialogInput" size="12"/>
                   <foreground color="-16777216"/>
-                  <text value="   LOCATİON : Emniyet, Milas Sk. No:30, 06560 Yenimahalle/Ankara"/>
+                  <text value="   LOCATION : Emniyet, Milas Sk. No:30, 06560 Yenimahalle/Ankara"/>
                 </properties>
               </component>
               <component id="d480b" class="javax.swing.JLabel" binding="instaLogo" custom-create="true">
@@ -257,7 +257,7 @@
                 <properties>
                   <font name="DialogInput" size="12"/>
                   <foreground color="-16777216"/>
-                  <text value="© 2008-2023 Tüm Hakları Saklıdır. Swiftwheels.com"/>
+                  <text value="© 2008-2023 All Rights Reserved. Swiftwheels.com"/>
                 </properties>
               </component>
               <vspacer id="8496f">
@@ -1701,7 +1701,7 @@
                             <properties>
                               <foreground color="-16777216"/>
                               <labelFor value="f2063"/>
-                              <text value="Iade etmek istediginiz aracin idsini giriniz"/>
+                              <text value="Enter the ID of the vehicle you want to return"/>
                             </properties>
                           </component>
                           <component id="f2063" class="javax.swing.JTextField" binding="iadeField">
@@ -1719,7 +1719,7 @@
                             <properties>
                               <background color="-11758696"/>
                               <foreground color="-1"/>
-                              <text value="Iade"/>
+                              <text value="Return"/>
                             </properties>
                           </component>
                           <hspacer id="d321e">
@@ -1888,7 +1888,7 @@
                       <grid row="8" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <text value="kirala"/>
+                      <text value="Rent"/>
                     </properties>
                   </component>
                   <component id="9d79b" class="javax.swing.JTextArea" binding="cinfo">
@@ -1900,7 +1900,7 @@
                     <properties>
                       <background color="-2690825"/>
                       <foreground color="-16777216"/>
-                      <text value="&#9;&#9;&#9;SOZLESME&#10;1-sadasdscac&#10;2-VnALNsKLcmcmsa&#10;3- DLA&lt;ScmASLmcASKL&#10;4- dslamklcmalms"/>
+                      <text value="&#9;&#9;&#9;CONTRACT&#10;1-sadasdscac&#10;2-VnALNsKLcmcmsa&#10;3- DLA&lt;ScmASLmcASKL&#10;4- dslamklcmalms"/>
                     </properties>
                   </component>
                   <component id="496e5" class="javax.swing.JLabel">
@@ -1926,7 +1926,7 @@
                     </constraints>
                     <properties>
                       <foreground color="-16777216"/>
-                      <text value="kasko+ sigorta (20$)"/>
+                      <text value="Full insurance ($20)"/>
                     </properties>
                   </component>
                   <component id="20c05" class="javax.swing.JCheckBox" binding="wantCheckbox">
@@ -1934,7 +1934,7 @@
                       <grid row="7" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <text value="istiyorum"/>
+                      <text value="I want it"/>
                     </properties>
                   </component>
                   <component id="e7dd4" class="javax.swing.JCheckBox" binding="acceptCheckbox">

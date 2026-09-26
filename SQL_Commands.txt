@@ -216,7 +216,7 @@ BEGIN
 
     
     ELSE
-        RAISE EXCEPTION 'Geçersiz araç türü: %', p_vehicle_type;
+        RAISE EXCEPTION 'Invalid vehicle type: %', p_vehicle_type;
     END IF;
 END;
 $BODY$;
@@ -232,7 +232,7 @@ CREATE OR REPLACE FUNCTION public.get_vehicles(
 
 AS $BODY$
 BEGIN
-    -- Eğer araç türü "car" ise
+    -- If the vehicle type is "car"
     IF p_vehicle_type = 'car' THEN
         RETURN QUERY
         SELECT 
@@ -245,7 +245,7 @@ BEGIN
         INNER JOIN car_details cd ON v.id = cd.vehicle_id
         ORDER BY v.id;
 
-    -- Eğer araç türü "jeep" ise
+    -- If the vehicle type is "jeep"
     ELSIF p_vehicle_type = 'jeep' THEN
         RETURN QUERY
         SELECT 
@@ -258,7 +258,7 @@ BEGIN
         INNER JOIN jeep_details jd ON v.id = jd.vehicle_id
         ORDER BY v.id;
 
-    -- Eğer araç türü "motor" ise
+    -- If the vehicle type is "motor"
     ELSIF p_vehicle_type = 'motor' THEN
         RETURN QUERY
         SELECT 
@@ -271,9 +271,9 @@ BEGIN
         INNER JOIN motor_details md ON v.id = md.vehicle_id
         ORDER BY v.id;
 
-    -- Geçersiz araç türü verilirse hata döndür
+    -- Raise an error if an invalid vehicle type is given
     ELSE
-        RAISE EXCEPTION 'Geçersiz araç türü: %', p_vehicle_type;
+        RAISE EXCEPTION 'Invalid vehicle type: %', p_vehicle_type;
     END IF;
 END;
 $BODY$;
@@ -288,7 +288,7 @@ LANGUAGE 'plpgsql'
 AS $BODY$
 BEGIN 
     IF EXISTS (SELECT 1 FROM public.rented_vehicles WHERE user_id = p_user_id) THEN
-        RAISE EXCEPTION 'Kiralanmış aracınız var, hesabınızı silemezsiniz';
+        RAISE EXCEPTION 'You have a rented vehicle; the account cannot be deleted';
     ELSE
         DELETE FROM public.kullanici WHERE id = p_user_id;
     END IF;
@@ -340,17 +340,17 @@ AS $BODY$
 DECLARE
     new_vehicle_id INT;
 BEGIN
-    -- Eğer p_vehicle_id NULL ise yeni bir kayıt ekle
+    -- If p_vehicle_id is NULL, insert a new record
     IF p_vehicle_id IS NULL THEN
-        -- Mevcut en yüksek ID'yi al
+        -- Get the current highest ID
         SELECT COALESCE(MAX(id), 0) + 1 INTO new_vehicle_id FROM public.vehicles;
 
-        -- Vehicles tablosuna yeni kayıt ekle
+        -- Insert a new record into the vehicles table
         INSERT INTO public.vehicles(
             id, make, model, year, km, color, engine_power, engine_capacity, price, stock)
         VALUES (new_vehicle_id, p_make, p_model, p_year, p_km, p_color, p_engine_power, p_engine_capacity, p_price, p_stock);
 
-        -- Araç türüne göre ilgili tabloya kayıt ekle
+        -- Insert a record into the matching table for the vehicle type
         IF p_type = 'car' THEN
             INSERT INTO public.car_details(vehicle_id, seri, fuel)
             VALUES (new_vehicle_id, p_seri, p_fuel);
@@ -367,16 +367,16 @@ BEGIN
             RAISE EXCEPTION 'Invalid vehicle type: %', p_type;
         END IF;
 
-    -- Eğer p_vehicle_id NULL değilse var olan kaydı güncelle
+    -- If p_vehicle_id is not NULL, update the existing record
     ELSE
-        -- Vehicles tablosunu güncelle
+        -- Update the vehicles table
         UPDATE public.vehicles
         SET make = p_make, model = p_model, year = p_year, km = p_km, color = p_color, 
             engine_power = p_engine_power, engine_capacity = p_engine_capacity, 
             price = p_price, stock = p_stock
         WHERE id = p_vehicle_id;
 
-        -- Araç türüne göre ilgili tabloyu güncelle
+        -- Update the matching table for the vehicle type
         IF p_type = 'car' THEN
             UPDATE public.car_details
             SET seri = p_seri, fuel = p_fuel
@@ -412,9 +412,9 @@ BEGIN
         FROM rented_vehicles
         WHERE vehicle_id = p_vehicle_id
     ) THEN
-        RAISE EXCEPTION 'Seçtiğiniz araç kiralı durumda, silme işlemi yapılamaz.';
+        RAISE EXCEPTION 'The selected vehicle is currently rented and cannot be deleted.';
     END IF;
-    -- Önce araç türüne göre ilişkili tabloyu sil
+    -- First, delete from the related table for the vehicle type
     IF p_type = 'car' THEN
         DELETE FROM public.car_details
         WHERE vehicle_id = p_vehicle_id;
@@ -444,20 +444,20 @@ CREATE OR REPLACE PROCEDURE public.return_vehicle(
 LANGUAGE 'plpgsql'
 AS $BODY$
 BEGIN
-    -- Kullanıcı ve araç için bir kiralama kaydı olup olmadığını kontrol et
+    -- Check whether a rental record exists for this user and vehicle
     IF EXISTS (
         SELECT 1
         FROM rented_vehicles
         WHERE user_id = p_user_id AND vehicle_id = p_vehicle_id
     ) THEN
-        -- Kiralama kaydını sil
+        -- Delete the rental record
         DELETE FROM rented_vehicles
         WHERE user_id = p_user_id AND vehicle_id = p_vehicle_id;
 
-        RAISE NOTICE 'Araç başarıyla iade edildi.';
+        RAISE NOTICE 'Vehicle returned successfully.';
     ELSE
-        -- Kayıt bulunamadıysa hata fırlat
-        RAISE EXCEPTION 'Bu kullanıcı için iade edilecek bir araç kaydı bulunamadı.';
+        -- Raise an error if no record was found
+        RAISE EXCEPTION 'No rented vehicle record was found for this user.';
     END IF;
 END;
 $BODY$;
@@ -473,33 +473,33 @@ CREATE OR REPLACE PROCEDURE public.vehicle_rent(
 LANGUAGE 'plpgsql'
 AS $BODY$
 DECLARE
-    v_current_stock INT;        -- Aracın mevcut stoğu
-    v_purchase_date DATE := CURRENT_DATE;  -- Kiralama tarihi
-    v_return_date DATE;         -- İade tarihi
+    v_current_stock INT;        -- Current stock of the vehicle
+    v_purchase_date DATE := CURRENT_DATE;  -- Rental date
+    v_return_date DATE;         -- Return date
 BEGIN
-    -- Kullanıcının var olup olmadığını kontrol et
+    -- Check whether the user exists
     IF NOT EXISTS (
         SELECT 1
         FROM public.kullanici
         WHERE id = p_user_id
     ) THEN
-        RAISE EXCEPTION 'Kullanıcı bulunamadı: %', p_user_id;
+        RAISE EXCEPTION 'User not found: %', p_user_id;
     END IF;
 
-    -- Aracın mevcut stoğunu kontrol et
+    -- Check the vehicle's current stock
     SELECT stock INTO v_current_stock
     FROM public.vehicles
     WHERE id = p_vehicle_id;
 
-    -- Eğer stok 0 ise hata döndür
+    -- Raise an error if the stock is 0
     IF v_current_stock IS NULL OR v_current_stock <= 0 THEN
-        RAISE EXCEPTION 'Araç stoğu tükenmiş veya geçersiz araç ID: %', p_vehicle_id;
+        RAISE EXCEPTION 'Vehicle is out of stock or the vehicle ID is invalid: %', p_vehicle_id;
     END IF;
 
-    -- İade tarihini hesapla
+    -- Calculate the return date
     v_return_date := v_purchase_date + p_days_between;
 
-    -- Kiralama bilgilerini rented_vehicles tablosuna ekle
+    -- Insert the rental details into the rented_vehicles table
     INSERT INTO public.rented_vehicles (user_id, address, purchase_date, return_date, vehicle_id, fee)
     VALUES (p_user_id, p_address, v_purchase_date, v_return_date, p_vehicle_id, p_fee);
 
@@ -524,7 +524,7 @@ BEGIN
 
     
     IF (SELECT stock FROM vehicles WHERE id = NEW.vehicle_id) < 0 THEN
-        RAISE EXCEPTION 'Aracın stoğu tükenmiştir';
+        RAISE EXCEPTION 'The vehicle is out of stock';
     END IF;
 
     RETURN NEW;
@@ -604,23 +604,23 @@ CREATE OR REPLACE FUNCTION public.user_logs_trigger_function()
     VOLATILE NOT LEAKPROOF
 AS $BODY$
 BEGIN
-    -- INSERT işlemi için log
+    -- Log INSERT operations
     IF (TG_OP = 'INSERT') THEN
         INSERT INTO user_logs (user_id, login_time, user_action) 
         VALUES (NEW.id, CURRENT_TIMESTAMP, 'INSERT');
 
-    -- UPDATE işlemi için log
+    -- Log UPDATE operations
     ELSIF (TG_OP = 'UPDATE') THEN
         INSERT INTO user_logs (user_id, login_time, user_action) 
         VALUES (NEW.id, CURRENT_TIMESTAMP, 'UPDATE');
 
-    -- DELETE işlemi için log
+    -- Log DELETE operations
     ELSIF (TG_OP = 'DELETE') THEN
         INSERT INTO user_logs (user_id, login_time, user_action) 
         VALUES (OLD.id, CURRENT_TIMESTAMP, 'DELETE');
     END IF;
 
-    RETURN NULL; -- AFTER trigger için kullanılmaz
+    RETURN NULL; -- Not used for AFTER triggers
 END;
 $BODY$;
 

@@ -28,23 +28,23 @@ public class Motorcycle extends Vehicle {
             if (rs.next()) {
                 return new Motorcycle(
                         rs.getInt("id"),
-                        rs.getString("detail1"),             // Motor tipi
-                        rs.getString("detail2"),          // Soğutma türü
-                        rs.getString("detail3"),         // Silindir sayısı
-                        rs.getString("make"),             // Marka
+                        rs.getString("detail1"),             // Engine type
+                        rs.getString("detail2"),          // Cooling type
+                        rs.getString("detail3"),         // Number of cylinders
+                        rs.getString("make"),             // Make
                         rs.getString("model"),            // Model
-                        rs.getInt("year"),                // Üretim yılı
-                        rs.getInt("km"),                  // Kilometre
-                        rs.getString("color"),            // Renk
-                        rs.getString("engine_power"),     // Motor gücü
-                        rs.getString("engine_capacity"),  // Motor kapasitesi
-                        rs.getInt("price"),               // Fiyat
-                        rs.getInt("stock")                // Stok miktarı
+                        rs.getInt("year"),                // Production year
+                        rs.getInt("km"),                  // Kilometers
+                        rs.getString("color"),            // Color
+                        rs.getString("engine_power"),     // Engine power
+                        rs.getString("engine_capacity"),  // Engine capacity
+                        rs.getInt("price"),               // Price
+                        rs.getInt("stock")                // Stock quantity
                 );
             }
 
         } catch (SQLException e) {
-            System.err.println("Motorcycle alınırken hata oluştu: " + e.getMessage());
+            System.err.println("Error while fetching motorcycle: " + e.getMessage());
         }
         return null;
     }
@@ -57,7 +57,7 @@ public class Motorcycle extends Vehicle {
              ResultSet rs = stmt.executeQuery(query)) {
 
             while (rs.next()) {
-                int id = rs.getInt("id"); // ID'yi al
+                int id = rs.getInt("id"); // Get the ID
                 String make = rs.getString("make");
                 String type = rs.getString("detail1");
                 String cooling = rs.getString("detail2");
@@ -71,7 +71,7 @@ public class Motorcycle extends Vehicle {
                 int price = rs.getInt("price");
                 int stock = rs.getInt("stock");
 
-                // ID dahil edilen Motorcycle nesnesi oluşturuluyor
+                // Create the Motorcycle object, including its ID
                 motorcycleList.add(new Motorcycle(id, type, cooling, cylinders, make, model, year, kilometer, color, enginePower, engineCapacity, price, stock));
             }
 
@@ -116,10 +116,10 @@ public class Motorcycle extends Vehicle {
             stmt.setString(13, cylinder.getText());
 
             stmt.executeUpdate();
-            System.out.println("Motorcycle başarıyla güncellendi.");
+            System.out.println("Motorcycle updated successfully.");
 
         } catch (SQLException e) {
-            System.err.println("Motorcycle güncellenirken hata oluştu: " + e.getMessage());
+            System.err.println("Error while updating motorcycle: " + e.getMessage());
         }
     }
     public void addMotorToDB(
@@ -145,9 +145,9 @@ public class Motorcycle extends Vehicle {
             stmt.setString(12, cylinder);
 
             stmt.executeUpdate();
-            System.out.println("Motor başarıyla eklendi.");
+            System.out.println("Motorcycle added successfully.");
         } catch (SQLException e) {
-            System.err.println("Motor eklenirken hata oluştu: " + e.getMessage());
+            System.err.println("Error while adding motorcycle: " + e.getMessage());
         }
     }
     @Override

@@ -26,24 +26,24 @@ public class Car extends Vehicle {
             if (rs.next()) {
                 return new Car(
                         rs.getInt("id"),
-                        rs.getString("detail1"),             // Seri numarası
+                        rs.getString("detail1"),             // Serial number
                         rs.getString("detail2"),               // fuel
-                        rs.getString("make"),               // Marka
+                        rs.getString("make"),               // Make
                         rs.getString("model"),              // Model
-                        rs.getInt("year"),                  // Üretim yılı
-                        rs.getInt("km"),                    // Kilometre
-                        rs.getString("color"),              // Renk
-                        rs.getString("engine_power"),       // Motor gücü
-                        rs.getString("engine_capacity"),    // Motor kapasitesi
-                        rs.getInt("price"),                 // Fiyat
-                        rs.getInt("stock")                  // Stok miktarı
+                        rs.getInt("year"),                  // Production year
+                        rs.getInt("km"),                    // Kilometers
+                        rs.getString("color"),              // Color
+                        rs.getString("engine_power"),       // Engine power
+                        rs.getString("engine_capacity"),    // Engine capacity
+                        rs.getInt("price"),                 // Price
+                        rs.getInt("stock")                  // Stock quantity
                 );
             }
 
         } catch (SQLException e) {
-            System.err.println("Car alınırken hata oluştu: " + e.getMessage());
+            System.err.println("Error while fetching car: " + e.getMessage());
         }
-        return null; // Eğer araç bulunamazsa null döndür
+        return null; // Return null if the vehicle is not found
     }
     public ArrayList<Car> getAllCars() {
         ArrayList<Car> carList = new ArrayList<>();
@@ -54,7 +54,7 @@ public class Car extends Vehicle {
              ResultSet rs = stmt.executeQuery(query)) {
 
             while (rs.next()) {
-                int id = rs.getInt("id"); // ID'yi al
+                int id = rs.getInt("id"); // Get the ID
                 String make = rs.getString("make");
                 String model = rs.getString("model");
                 int year = rs.getInt("year");
@@ -67,7 +67,7 @@ public class Car extends Vehicle {
                 String serial = rs.getString("detail1");
                 String fuel = rs.getString("detail2");
 
-                // ID dahil edilen Car nesnesi oluşturuluyor
+                // Create the Car object, including its ID
                 carList.add(new Car(id, serial, fuel, make, model, year, kilometer, color, enginePower, engineCapacity, price, stock));
             }
 
@@ -111,10 +111,10 @@ public class Car extends Vehicle {
             stmt.setString(12, fuel.getText());
 
             stmt.executeUpdate();
-            System.out.println("Car başarıyla güncellendi.");
+            System.out.println("Car updated successfully.");
 
         } catch (SQLException e) {
-            System.err.println("Car güncellenirken hata oluştu: " + e.getMessage());
+            System.err.println("Error while updating car: " + e.getMessage());
         }
     }
     public void addCarToDB(
@@ -139,9 +139,9 @@ public class Car extends Vehicle {
             stmt.setString(11, fuel);
 
             stmt.executeUpdate();
-            System.out.println("Car başarıyla eklendi.");
+            System.out.println("Car added successfully.");
         } catch (SQLException e) {
-            System.err.println("Car eklenirken hata oluştu: " + e.getMessage());
+            System.err.println("Error while adding car: " + e.getMessage());
         }
     }
     @Override

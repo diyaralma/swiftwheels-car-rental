@@ -214,25 +214,25 @@ public class innerAppPanel {
     ArrayList<Jeep> jeepList = new ArrayList<>();
 
     public innerAppPanel(int userId) {
-        // Menu paneli action listenerleri
+        // Menu panel action listeners
         menu.addActionListener(e -> {
             menuOpen.setVisible(false);
             MenuClose.setVisible(true);
             MenuPanel.setVisible(true);
-        });//Menu tuşuna basıldığında menu paneli açacak
+        });//Opens the menu panel when the Menu button is pressed
         menuCloseButton.addActionListener(e -> {
             MenuClose.setVisible(true);
             menuOpen.setVisible(true);
             MenuPanel.setVisible(false);
-        });//Menu tuşuna basıldığında menu panelini kapatacak
+        });//Closes the menu panel when the Menu button is pressed
         homeButton.addActionListener(e -> {
             parentPanel.removeAll();
             parentPanel.add(homePanel);
             parentPanel.repaint();
             parentPanel.revalidate();
             vehicleTypePanel.setVisible(false);
-        });//Home  tuşuna basıldığında Home sayfasını açacak
-        //uygulamada soldaki menu paneli
+        });//Opens the Home page when the Home button is pressed
+        //Menu panel on the left side of the app
         vehicleButton.addActionListener(e -> {
             carRadioButton.setSelected(true);
             parentPanel.removeAll();
@@ -250,7 +250,7 @@ public class innerAppPanel {
                 updateMotoPanel();
                 counters++;
             }
-        });//Vehicle tuşuna basıldığında Vehicle sayfasını açacak
+        });//Opens the Vehicle page when the Vehicle button is pressed
         contractButton.addActionListener(e -> {
             parentPanel.removeAll();
             if(isAdminMode[0]){
@@ -266,17 +266,17 @@ public class innerAppPanel {
             parentPanel.repaint();
             parentPanel.revalidate();
             vehicleTypePanel.setVisible(false);
-        }); // burada admin cikisi oldugunda sorun cikiyor
+        }); // there is an issue here when exiting admin mode
         accountButton.addActionListener(e -> {
             parentPanel.removeAll();
             parentPanel.add(accountPanel);
-            customer.loadUserInfoToTextArea(userId,nameArea,surnameArea,phoneArea, emailArea,passwordArea); // Bilgileri yükle
+            customer.loadUserInfoToTextArea(userId,nameArea,surnameArea,phoneArea, emailArea,passwordArea); // Load the user info
             parentPanel.repaint();
             parentPanel.revalidate();
             vehicleTypePanel.setVisible(false);
-        } );//Account tuşuna basıldığında account sayfasını açacak
-        logOutButton.addActionListener(e -> LoginRegisterPanel.closeAllFrames());//Uygulamayı kapatıyor
-        //account panelde isim degiskenlerini degistirmek icin
+        } );//Opens the Account page when the Account button is pressed
+        logOutButton.addActionListener(e -> LoginRegisterPanel.closeAllFrames());//Closes the application
+        //for editing the name fields on the account panel
         editButton.addActionListener(e -> {
             nameArea.setEditable(true);
             surnameArea.setEditable(true);
@@ -293,18 +293,18 @@ public class innerAppPanel {
         deleteButton.addActionListener(e -> {
             int result = JOptionPane.showConfirmDialog(
                     null,
-                    "Hesabı silmek istiyor musunuz?",
-                    "Hesap Silme",
+                    "Do you want to delete your account?",
+                    "Delete Account",
                     JOptionPane.YES_NO_OPTION
             );
             if (result == JOptionPane.YES_OPTION) {
                 try {
-                    // Hesabı silmek için deleteFile metodunu çağır
+                    // Call deleteFile to delete the account
                     customer.deleteFile(userId);
 
-                    // Başarı durumunu kontrol etmek için bir ek mantık
+                    // Additional check to confirm the deletion succeeded
                     if (customer.isAccountDeleted(userId)) {
-                        // Başarılı işlem sonrası kullanıcıyı giriş ekranına yönlendir
+                        // On success, redirect the user to the login screen
                         LoginRegisterPanel.closeAllFrames();
                         JFrame frame = new JFrame("LoginRegisterPanel");
                         frame.setContentPane(new LoginRegisterPanel().mainPanel);
@@ -318,18 +318,18 @@ public class innerAppPanel {
 
                         JOptionPane.showMessageDialog(
                                 null,
-                                "Hesap silinemedi. Kiralanmış aracınız olabilir.",
-                                "Hata",
+                                "The account could not be deleted. You may have a rented vehicle.",
+                                "Error",
                                 JOptionPane.ERROR_MESSAGE
                         );
                     }
 
                 } catch (Exception ex) {
-                    // Beklenmeyen diğer hatalar için kullanıcıya mesaj göster
+                    // Show the user a message for any other unexpected errors
                     JOptionPane.showMessageDialog(
                             null,
-                            "Hesap silinemedi: " + ex.getMessage(),
-                            "Hata",
+                            "The account could not be deleted: " + ex.getMessage(),
+                            "Error",
                             JOptionPane.ERROR_MESSAGE
                     );
                 }
@@ -351,29 +351,29 @@ public class innerAppPanel {
             customer.loadUserInfoToTextArea(userId,nameArea,surnameArea,phoneArea,emailArea,passwordArea);
         });
         adminButton.addActionListener(e -> {
-            String admin = adminKey.getText(); // Kullanıcıdan giriş metnini al
+            String admin = adminKey.getText(); // Get the text entered by the user
 
             if (!isAdminMode[0] && Objects.equals(admin, "admin")) {
-                // Admin moduna giriş
-                isAdminMode[0] = true; // Admin modu aktif
-                toggleAdminMode(true); // Admin modu açılır
-                JOptionPane.showMessageDialog(null, "Admin girişi başarılı");
+                // Enter admin mode
+                isAdminMode[0] = true; // Admin mode on
+                toggleAdminMode(true); // Enable admin mode
+                JOptionPane.showMessageDialog(null, "Admin login successful");
             }
             else if (isAdminMode[0] && Objects.equals(admin, "admincikis")) {
-                // Admin modundan çıkış
-                isAdminMode[0] = false; // Admin modu devre dışı
-                toggleAdminMode(false); // Admin modu kapatılır
-                JOptionPane.showMessageDialog(null, "Admin çıkışı yapıldı");
+                // Exit admin mode
+                isAdminMode[0] = false; // Admin mode off
+                toggleAdminMode(false); // Disable admin mode
+                JOptionPane.showMessageDialog(null, "Logged out of admin mode");
             }
             else if (!isAdminMode[0]) {
-                // Hatalı giriş (Admin değilken giriş denemesi)
-                JOptionPane.showMessageDialog(null, "Hatalı giriş. Lütfen doğru bir değer girin!");
+                // Invalid input (login attempt while not in admin mode)
+                JOptionPane.showMessageDialog(null, "Invalid input. Please enter a valid value!");
             }
             else {
-                // Admin modunda ama hatalı komut girildi
-                JOptionPane.showMessageDialog(null, "Geçersiz işlem. Admin çıkışı yapmak için 'admincikis' yazın.");
+                // In admin mode, but an invalid command was entered
+                JOptionPane.showMessageDialog(null, "Invalid operation. Type 'admincikis' to exit admin mode.");
             }
-        });// Admin durumunu takip eden bir değişken
+        });// A variable that tracks the admin state
         signOutButton.addActionListener(e -> {
             LoginRegisterPanel.closeAllFrames();
             JFrame frame = new JFrame("LoginRegisterPanel");
@@ -384,9 +384,9 @@ public class innerAppPanel {
             frame.pack();
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
-        });//Hesaptan çıkış yapıp login register atıyor
-        //account panel islemleri bitti
-        //show details tuslariyla araclara edit update islemleri
+        });//Signs out of the account and returns to the login/register screen
+        //end of account panel actions
+        //edit/update actions on vehicles via the show details buttons
         adminEdit1.addActionListener(e -> {
             carMakeprivate.setEditable(true);
             carFuelprivate.setEditable(true);
@@ -423,14 +423,14 @@ public class innerAppPanel {
         });// car update button
         adminDelete1.addActionListener(e -> {
             int response = JOptionPane.showConfirmDialog(null,
-                    "Bu aracı silmek istediğinizden emin misiniz?",
-                    "Aracı Sil",
+                    "Are you sure you want to delete this vehicle?",
+                    "Delete Vehicle",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.WARNING_MESSAGE);
 
-            // Eğer kullanıcı "Evet" derse, aracı sil
+            // If the user answers "Yes", delete the vehicle
             if (response == JOptionPane.YES_OPTION) {
-                // İlk olarak, `carList` içerisinde doğru aracı bul
+                // First, find the matching vehicle in `carList`
                 Car vehicleToDelete = null;
                 for (Car car : carList) {
                     if (car.getId() == currentVehicleId) {
@@ -439,51 +439,51 @@ public class innerAppPanel {
                     }
                 }
 
-                // Eğer araç bulunduysa, silme işlemini gerçekleştir
+                // If the vehicle was found, perform the deletion
                 if (vehicleToDelete != null) {
                     try {
-                        // Veritabanından silme işlemini dene
-                        car.deleteCar(currentVehicleId); // Prosedürü çağır
+                        // Try to delete it from the database
+                        car.deleteCar(currentVehicleId); // Call the procedure
 
-                        // Fotoğraf dosyasının yolunu oluştur
-                        int vehicleId = vehicleToDelete.getId(); // Araç ID'si
+                        // Build the photo file path
+                        int vehicleId = vehicleToDelete.getId(); // Vehicle ID
                         String photoPath = String.format("images/vehicles_%d.png", vehicleId);
 
-                        // Fotoğrafı sil
+                        // Delete the photo
                         File photoFile = new File(photoPath);
                         if (photoFile.exists()) {
                             if (photoFile.delete()) {
-                                System.out.println("Fotoğraf başarıyla silindi: " + photoPath);
+                                System.out.println("Photo deleted successfully: " + photoPath);
                             } else {
-                                System.out.println("Fotoğraf silinemedi: " + photoPath);
+                                System.out.println("Photo could not be deleted: " + photoPath);
                             }
                         } else {
-                            System.out.println("Fotoğraf dosyası bulunamadı: " + photoPath);
+                            System.out.println("Photo file not found: " + photoPath);
                         }
 
-                        // Listeden sil ve paneli güncelle
+                        // Remove it from the list and refresh the panel
                         carList.remove(vehicleToDelete);
                         vehicleParentPanel.removeAll();
                         vehicleParentPanel.add(carPanel);
                         vehicleParentPanel.revalidate();
                         vehicleParentPanel.repaint();
-                        updateCarPanel(); // Paneli güncelle
+                        updateCarPanel(); // Refresh the panel
 
-                        JOptionPane.showMessageDialog(null, "Araç ve fotoğraf başarıyla silindi.");
+                        JOptionPane.showMessageDialog(null, "Vehicle and photo deleted successfully.");
 
                     } catch (SQLException ex) {
-                        // Eğer SQL işlemi hata verirse, kullanıcıyı bilgilendir
+                        // If the SQL operation fails, notify the user
                         JOptionPane.showMessageDialog(null,
-                                "Bir hata oluştu: " + ex.getMessage(),
-                                "Silme Hatası", JOptionPane.ERROR_MESSAGE);
-                        System.err.println("SQL Hatası: " + ex.getMessage());
+                                "An error occurred: " + ex.getMessage(),
+                                "Deletion Error", JOptionPane.ERROR_MESSAGE);
+                        System.err.println("SQL Error: " + ex.getMessage());
                     }
 
                 } else {
-                    JOptionPane.showMessageDialog(null, "Araç bulunamadı. Silme işlemi gerçekleştirilemedi.");
+                    JOptionPane.showMessageDialog(null, "Vehicle not found. The deletion could not be completed.");
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "Silme işlemi iptal edildi.");
+                JOptionPane.showMessageDialog(null, "Deletion canceled.");
             }
         });
 
@@ -528,13 +528,13 @@ public class innerAppPanel {
         });// motor update button
         adminDelete2.addActionListener(e -> {
             int response = JOptionPane.showConfirmDialog(null,
-                    "Bu aracı silmek istediğinizden emin misiniz?",
-                    "Aracı Sil",
+                    "Are you sure you want to delete this vehicle?",
+                    "Delete Vehicle",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.WARNING_MESSAGE);
 
             if (response == JOptionPane.YES_OPTION) {
-                // İlk olarak, motor listesinde doğru motoru bul
+                // First, find the matching motorcycle in the motorcycle list
                 Motorcycle motorcycleToDelete = null;
                 for (Motorcycle moto : motorList) {
                     if (moto.getId() == currentVehicleId) {
@@ -543,51 +543,51 @@ public class innerAppPanel {
                     }
                 }
 
-                // Eğer motor bulunduysa, silme işlemini gerçekleştir
+                // If the motorcycle was found, perform the deletion
                 if (motorcycleToDelete != null) {
                     try {
-                        // Veritabanından silme işlemini dene
-                        motorcycle.deleteMotorcycle(currentVehicleId); // Prosedürü çağır
+                        // Try to delete it from the database
+                        motorcycle.deleteMotorcycle(currentVehicleId); // Call the procedure
 
-                        // Fotoğraf dosyasının yolunu oluştur
-                        int motorcycleId = motorcycleToDelete.getId(); // Motor ID'si
+                        // Build the photo file path
+                        int motorcycleId = motorcycleToDelete.getId(); // Motorcycle ID
                         String photoPath = String.format("images/vehicles_%d.png", motorcycleId);
 
-                        // Fotoğrafı sil
+                        // Delete the photo
                         File photoFile = new File(photoPath);
                         if (photoFile.exists()) {
                             if (photoFile.delete()) {
-                                System.out.println("Fotoğraf başarıyla silindi: " + photoPath);
+                                System.out.println("Photo deleted successfully: " + photoPath);
                             } else {
-                                System.out.println("Fotoğraf silinemedi: " + photoPath);
+                                System.out.println("Photo could not be deleted: " + photoPath);
                             }
                         } else {
-                            System.out.println("Fotoğraf dosyası bulunamadı: " + photoPath);
+                            System.out.println("Photo file not found: " + photoPath);
                         }
 
-                        // Listeden sil ve paneli güncelle
+                        // Remove it from the list and refresh the panel
                         motorList.remove(motorcycleToDelete);
                         vehicleParentPanel.removeAll();
                         vehicleParentPanel.add(motorcyclePanel);
                         vehicleParentPanel.revalidate();
                         vehicleParentPanel.repaint();
-                        updateMotoPanel(); // Paneli güncelle
+                        updateMotoPanel(); // Refresh the panel
 
-                        JOptionPane.showMessageDialog(null, "Araç ve fotoğraf başarıyla silindi.");
+                        JOptionPane.showMessageDialog(null, "Vehicle and photo deleted successfully.");
 
                     } catch (SQLException ex) {
-                        // Eğer SQL işlemi hata verirse, kullanıcıyı bilgilendir
+                        // If the SQL operation fails, notify the user
                         JOptionPane.showMessageDialog(null,
-                                "Bir hata oluştu: " + ex.getMessage(),
-                                "Silme Hatası", JOptionPane.ERROR_MESSAGE);
-                        System.err.println("SQL Hatası: " + ex.getMessage());
+                                "An error occurred: " + ex.getMessage(),
+                                "Deletion Error", JOptionPane.ERROR_MESSAGE);
+                        System.err.println("SQL Error: " + ex.getMessage());
                     }
 
                 } else {
-                    JOptionPane.showMessageDialog(null, "Araç bulunamadı. Silme işlemi gerçekleştirilemedi.");
+                    JOptionPane.showMessageDialog(null, "Vehicle not found. The deletion could not be completed.");
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "Silme işlemi iptal edildi.");
+                JOptionPane.showMessageDialog(null, "Deletion canceled.");
             }
         });
 // motor delete button
@@ -630,13 +630,13 @@ public class innerAppPanel {
         });// jeep update button
         adminDelete3.addActionListener(e -> {
             int response = JOptionPane.showConfirmDialog(null,
-                    "Bu aracı silmek istediğinizden emin misiniz?",
-                    "Aracı Sil",
+                    "Are you sure you want to delete this vehicle?",
+                    "Delete Vehicle",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.WARNING_MESSAGE);
 
             if (response == JOptionPane.YES_OPTION) {
-                // İlk olarak, jeep listesinde doğru aracı bul
+                // First, find the matching vehicle in the jeep list
                 Jeep jeepToDelete = null;
                 for (Jeep suv : jeepList) {
                     if (suv.getId() == currentVehicleId) {
@@ -645,74 +645,74 @@ public class innerAppPanel {
                     }
                 }
 
-                // Eğer jeep bulunduysa, silme işlemini gerçekleştir
+                // If the jeep was found, perform the deletion
                 if (jeepToDelete != null) {
                     try {
-                        // Veritabanından silme işlemini dene
-                        jeep.deleteJeep(currentVehicleId); // Prosedürü çağır
+                        // Try to delete it from the database
+                        jeep.deleteJeep(currentVehicleId); // Call the procedure
 
-                        // Fotoğraf dosyasının yolunu oluştur
-                        int jeepId = jeepToDelete.getId(); // Jeep ID'si
+                        // Build the photo file path
+                        int jeepId = jeepToDelete.getId(); // Jeep ID
                         String photoPath = String.format("images/vehicles_%d.png", jeepId);
 
-                        // Fotoğrafı sil
+                        // Delete the photo
                         File photoFile = new File(photoPath);
                         if (photoFile.exists()) {
                             if (photoFile.delete()) {
-                                System.out.println("Fotoğraf başarıyla silindi: " + photoPath);
+                                System.out.println("Photo deleted successfully: " + photoPath);
                             } else {
-                                System.out.println("Fotoğraf silinemedi: " + photoPath);
+                                System.out.println("Photo could not be deleted: " + photoPath);
                             }
                         } else {
-                            System.out.println("Fotoğraf dosyası bulunamadı: " + photoPath);
+                            System.out.println("Photo file not found: " + photoPath);
                         }
 
-                        // Listeden sil ve paneli güncelle
+                        // Remove it from the list and refresh the panel
                         jeepList.remove(jeepToDelete);
                         vehicleParentPanel.removeAll();
                         vehicleParentPanel.add(suvPanel);
                         vehicleParentPanel.revalidate();
                         vehicleParentPanel.repaint();
-                        updateJeepPanel(); // Paneli güncelle
+                        updateJeepPanel(); // Refresh the panel
 
-                        JOptionPane.showMessageDialog(null, "Araç ve fotoğraf başarıyla silindi.");
+                        JOptionPane.showMessageDialog(null, "Vehicle and photo deleted successfully.");
 
                     } catch (SQLException ex) {
-                        // Eğer SQL işlemi hata verirse, kullanıcıyı bilgilendir
+                        // If the SQL operation fails, notify the user
                         JOptionPane.showMessageDialog(null,
-                                "Bir hata oluştu: " + ex.getMessage(),
-                                "Silme Hatası", JOptionPane.ERROR_MESSAGE);
-                        System.err.println("SQL Hatası: " + ex.getMessage());
+                                "An error occurred: " + ex.getMessage(),
+                                "Deletion Error", JOptionPane.ERROR_MESSAGE);
+                        System.err.println("SQL Error: " + ex.getMessage());
                     }
 
                 } else {
-                    JOptionPane.showMessageDialog(null, "Araç bulunamadı. Silme işlemi gerçekleştirilemedi.");
+                    JOptionPane.showMessageDialog(null, "Vehicle not found. The deletion could not be completed.");
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "Silme işlemi iptal edildi.");
+                JOptionPane.showMessageDialog(null, "Deletion canceled.");
             }
         });
 // jeep delete button
-        //show details islemleri bitti
+        //end of show details actions
         carRadioButton.addActionListener(e -> {
             vehicleParentPanel.removeAll();
             vehicleParentPanel.add(carPanel);
             vehicleParentPanel.revalidate();
             vehicleParentPanel.repaint();
 
-        });//Araba panelini açan radio buttonu
+        });//Radio button that opens the car panel
         motorcycleRadioButton.addActionListener(e -> {
             vehicleParentPanel.removeAll();
             vehicleParentPanel.add(motorcyclePanel);
             vehicleParentPanel.revalidate();
             vehicleParentPanel.repaint();
-        });//motor panelini açan radio buttonu
+        });//Radio button that opens the motorcycle panel
         suvRadioButton.addActionListener(e -> {
             vehicleParentPanel.removeAll();
             vehicleParentPanel.add(suvPanel);
             vehicleParentPanel.revalidate();
             vehicleParentPanel.repaint();
-        });//suv panelini açan radio buttonu
+        });//Radio button that opens the SUV panel
         backButton.addActionListener(e -> {
             if(carRadioButton.isSelected()){
             vehicleParentPanel.removeAll();
@@ -732,7 +732,7 @@ public class innerAppPanel {
                 vehicleParentPanel.repaint();
             }
         });// Back button
-        // CONTRACT PANELLER
+        // CONTRACT PANELS
         seeVehiclesButton.addActionListener(e -> {
             vehicleTypePanel.setVisible(true);
             parentPanel.removeAll();
@@ -747,7 +747,7 @@ public class innerAppPanel {
             parentPanel.add(contractActionPanel);
             parentPanel.revalidate();
             parentPanel.repaint();
-            // GUI Designer'da oluşturulmuş alanlara format uygula
+            // Apply formatting to the fields created in the GUI Designer
             setupFormattedFields();
         });
         suvContractButton.addActionListener(e -> {
@@ -774,22 +774,22 @@ public class innerAppPanel {
             String returnDate = vehicleReturnField.getText();
             String address = addressField.getText();
 
-            // Alanların doluluğunu kontrol et
+            // Check that all fields are filled in
             if ( cardNumber.isEmpty() ||  cardDate.isEmpty() || cardCvc.isEmpty() || returnDate.isEmpty() || address.isEmpty() && acceptCheckbox.isSelected()) {
                 JOptionPane.showMessageDialog(null, "Please fill all fields!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            // Tarih doğrulaması
+            // Date validation
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            dateFormat.setLenient(false); // Tarih formatının kesinliğini sağlar
+            dateFormat.setLenient(false); // Enforces strict date parsing
             try {
-                // Kullanıcının girdiği tarihi kontrol et
+                // Check the date entered by the user
                 Date enteredDate = dateFormat.parse(returnDate);
 
-                // Sistem tarihinden bir gün sonrasını kontrol et
+                // Check against one day after the system date
                 Calendar systemCalendar = Calendar.getInstance();
-                systemCalendar.add(Calendar.DAY_OF_MONTH, 1); // Sistem tarihine 1 gün ekle
+                systemCalendar.add(Calendar.DAY_OF_MONTH, 1); // Add 1 day to the system date
                 Date minDate = systemCalendar.getTime();
 
                 if (!enteredDate.after(minDate)) {
@@ -805,7 +805,7 @@ public class innerAppPanel {
                 try {
                     rentVehicle(userId,address,currentVehicleId,daysBetween,feeField, parentPanel);
 
-                    // Ekranı temizleme ve güncelleme
+                    // Clear and refresh the screen
                     parentPanel.removeAll();
                     parentPanel.add(homePanel);
                     parentPanel.repaint();
@@ -817,7 +817,7 @@ public class innerAppPanel {
                 }
             }
 
-            // Alanları temizle
+            // Clear the fields
             cardNumberField.setText("");
             cardDateField.setText("");
             cardCvcField.setText("");
@@ -827,9 +827,9 @@ public class innerAppPanel {
             wantCheckbox.setSelected(false);
             acceptCheckbox.setSelected(false);
         });
-        // Alanları temizle
+        // Clear the fields
         acceptCheckbox.addActionListener(e -> {
-            // Kiralama islemleri
+            // Rental operations
             String returnDate = vehicleReturnField.getText();
             int daysBetween = calculateDaysBetween(returnDate, "dd/MM/yyyy") ;
             if (carRadioButton.isSelected()){
@@ -855,7 +855,7 @@ public class innerAppPanel {
                 }
             }
 
-        });// onaylama button
+        });// confirm button
         addVehicle1Button.addActionListener(e -> {
             vehicleParentPanel.removeAll();
             vehicleParentPanel.add(addVehiclePanel);
@@ -916,7 +916,7 @@ public class innerAppPanel {
         });// add vehicle panel opener
         addVehicle2Button.addActionListener(e -> {
             try {
-                // Ortak alanları al
+                // Get the common fields
                 String make = addVehicleMakeText.getText();
                 String model = addVehicleModelText.getText();
                 int year = Integer.parseInt(addVehicleYearText.getText());
@@ -927,23 +927,23 @@ public class innerAppPanel {
                 int price = Integer.parseInt(addVehiclePriceText.getText());
                 int stock = Integer.parseInt(addVehicleStockText.getText());
 
-                // Araç ID'sini al
+                // Get the vehicle ID
                 int vehicleId = getLastId("vehicles") + 1;
 
                 if (carRadioButton.isSelected()) {
-                    // Araba bilgilerini al
+                    // Get the car details
                     String serial = addVehicleSerialText.getText();
                     String fuel = addVehicleFuelText.getText();
 
-                    // Yeni araba nesnesi oluştur ve listeye ekle
+                    // Create a new car object and add it to the list
                     Car car = new Car(vehicleId, serial, fuel, make, model, year, kilometer, color, enginePower, engineCapacity, price, stock);
                     carList.add(car);
                     car.addCarToDB(make,model,year,kilometer,color,enginePower,engineCapacity,price,stock,serial,fuel);
 
-                    // Resmi kaydet
+                    // Save the image
                     saveImageFromLabel(imageLabel, "images", "vehicles_" + vehicleId + ".png");
 
-                    // Paneli güncelle
+                    // Refresh the panel
                     updateCarPanel();
                     vehicleParentPanel.removeAll();
                     vehicleParentPanel.add(carPanel);
@@ -951,20 +951,20 @@ public class innerAppPanel {
                     vehicleParentPanel.repaint();
 
                 } else if (motorcycleRadioButton.isSelected()) {
-                    // Motosiklet bilgilerini al
+                    // Get the motorcycle details
                     String type = addMotoTypeText.getText();
                     String cooling = addMotoCoolingText.getText();
                     String cylinder = addMotoCylinderText.getText();
 
-                    // Yeni motosiklet nesnesi oluştur ve listeye ekle
+                    // Create a new motorcycle object and add it to the list
                     Motorcycle motor = new Motorcycle(vehicleId, type, cooling, cylinder, make, model, year, kilometer, color, enginePower, engineCapacity, price, stock);
                     motorList.add(motor);
                     motor.addMotorToDB(make, model, year, kilometer, color, enginePower, engineCapacity, price, stock, type, cooling, cylinder);
 
-                    // Resmi kaydet
+                    // Save the image
                     saveImageFromLabel(imageLabel, "images", "vehicles_" + vehicleId + ".png");
 
-                    // Paneli güncelle
+                    // Refresh the panel
                     updateMotoPanel();
                     vehicleParentPanel.removeAll();
                     vehicleParentPanel.add(motorcyclePanel);
@@ -972,32 +972,32 @@ public class innerAppPanel {
                     vehicleParentPanel.repaint();
 
                 } else if (suvRadioButton.isSelected()) {
-                    // SUV bilgilerini al
+                    // Get the SUV details
                     String serial = addVehicleSerialText.getText();
                     String fuel = addVehicleFuelText.getText();
                     String traction = addJeepTractionText.getText();
 
-                    // Yeni SUV nesnesi oluştur ve listeye ekle
+                    // Create a new SUV object and add it to the list
                     Jeep jeep = new Jeep(vehicleId, serial, fuel, traction, make, model, year, kilometer, color, enginePower, engineCapacity, price, stock);
                     jeepList.add(jeep);
                     jeep.addJeepToDB(make, model, year, kilometer, color, enginePower, engineCapacity, price, stock, serial, fuel, traction);
 
-                    // Resmi kaydet
+                    // Save the image
                     saveImageFromLabel(imageLabel, "images", "vehicles_" + vehicleId + ".png");
 
-                    // Paneli güncelle
+                    // Refresh the panel
                     updateJeepPanel();
                     vehicleParentPanel.removeAll();
                     vehicleParentPanel.add(suvPanel);
                     vehicleParentPanel.revalidate();
                     vehicleParentPanel.repaint();
                 } else {
-                    JOptionPane.showMessageDialog(null, "Lütfen bir araç türü seçin!");
+                    JOptionPane.showMessageDialog(null, "Please select a vehicle type!");
                 }
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Hata: " + ex.getMessage());
+                JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
             }
-        });// bu butona tiklandiginda araba ekleme islemi gerceklesir
+        });// clicking this button adds the vehicle
         imageUploadButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setDialogTitle("Select Vehicle Image");
@@ -1008,12 +1008,12 @@ public class innerAppPanel {
                 File selectedFile = fileChooser.getSelectedFile();
 
                 try {
-                    // Fotoğrafı ölçeklendir ve JLabel içine koy
+                    // Scale the photo and place it in the JLabel
                     ImageIcon vehicleImageIcon = new ImageIcon(new ImageIcon(selectedFile.getAbsolutePath())
                             .getImage()
-                            .getScaledInstance(450, 200, Image.SCALE_SMOOTH)); // Görüntüyü ölçeklendir
+                            .getScaledInstance(450, 200, Image.SCALE_SMOOTH)); // Scale the image
 
-                    imageLabel.setIcon(vehicleImageIcon); // JLabel'e ikonu ata
+                    imageLabel.setIcon(vehicleImageIcon); // Set the icon on the JLabel
                     JOptionPane.showMessageDialog(null, "Image successfully loaded.");
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, "Error loading image: " + ex.getMessage());
@@ -1021,24 +1021,24 @@ public class innerAppPanel {
             } else {
                 JOptionPane.showMessageDialog(null, "Image loading canceled.");
             }
-        });// pcden fotograf yukleme
+        });// upload a photo from the computer
         adminPanelButton.addActionListener(e -> {
             try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
-                // Admin tablosundan verileri almak için SQL sorgusu
+                // SQL query to fetch data from the admin table
                 String query = "SELECT vehicle_type_number, user_number, rented_vehicle_number, total_turnover, vehicle_stock FROM public.admin";
 
                 try (Statement statement = connection.createStatement();
                      ResultSet resultSet = statement.executeQuery(query)) {
 
                     if (resultSet.next()) {
-                        // Veritabanındaki verileri değişkenlere al
+                        // Read the database values into variables
                         int vehicleTypeNumber = resultSet.getInt("vehicle_type_number");
                         int userNumber = resultSet.getInt("user_number");
                         int rentedVehicleNumber = resultSet.getInt("rented_vehicle_number");
                         double totalTurnover = resultSet.getDouble("total_turnover");
                         int vehicleStock = resultSet.getInt("vehicle_stock");
 
-                        // JTextArea'lara değerleri yerleştir
+                        // Put the values into the JTextAreas
                         adminVehicleType.setText(String.valueOf(vehicleTypeNumber));
                         adminUserNumber.setText(String.valueOf(userNumber));
                         adminOnRentedVehicle.setText(String.valueOf(rentedVehicleNumber));
@@ -1049,10 +1049,10 @@ public class innerAppPanel {
 
             } catch (SQLException ex) {
                 ex.printStackTrace();
-                JOptionPane.showMessageDialog(null, "Veritabanına bağlanırken bir hata oluştu: " + ex.getMessage(), "Hata", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "An error occurred while connecting to the database: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
 
-            // Panel görünürlük ve yeniden çizim işlemleri
+            // Panel visibility and repaint
             vehicleTypePanel.setVisible(false);
             parentPanel.removeAll();
             parentPanel.add(adminPanel);
@@ -1062,24 +1062,24 @@ public class innerAppPanel {
         iadeButton.addActionListener(e -> {
             int iadeId = Integer.parseInt(iadeField.getText());
             try {
-                // Araç iade fonksiyonunu çağır
+                // Call the vehicle return function
                 vehicle_return(userId, iadeId);
 
-                // Eğer başarılı olursa homePanel'e geçiş yap
+                // On success, switch to homePanel
                 parentPanel.removeAll();
                 parentPanel.add(homePanel);
                 parentPanel.revalidate();
                 parentPanel.repaint();
 
-                // Başarı mesajı göster
-                JOptionPane.showMessageDialog(null, "Araç başarıyla iade edildi.");
+                // Show a success message
+                JOptionPane.showMessageDialog(null, "Vehicle returned successfully.");
             } catch (Exception ex) {
-                // Eğer hata olursa adminPanel'de kal ve hata mesajı göster
+                // On error, stay on adminPanel and show an error message
                 JOptionPane.showMessageDialog(null,
-                        "İade işlemi sırasında bir hata oluştu: " + ex.getMessage(),
-                        "İade Hatası", JOptionPane.ERROR_MESSAGE);
+                        "An error occurred while returning the vehicle: " + ex.getMessage(),
+                        "Return Error", JOptionPane.ERROR_MESSAGE);
 
-                // Hata durumunda paneli adminPanel olarak bırak
+                // On error, leave the panel on adminPanel
                 parentPanel.removeAll();
                 parentPanel.add(adminPanel);
                 parentPanel.revalidate();
@@ -1089,20 +1089,20 @@ public class innerAppPanel {
     }
     public static void saveImageFromLabel(JLabel imageLabel, String destDirPath, String fileName) throws IOException {
         if (imageLabel.getIcon() != null) {
-            // Klasör kontrolü (yoksa oluştur)
+            // Check the folder (create it if missing)
             File destDir = new File(destDirPath);
             if (!destDir.exists()) {
                 destDir.mkdir();
             }
 
-            // Dosya yolu
+            // File path
             File destFile = new File(destDir, fileName);
 
-            // ImageIcon'dan BufferedImage oluştur
+            // Create a BufferedImage from the ImageIcon
             ImageIcon icon = (ImageIcon) imageLabel.getIcon();
             Image img = icon.getImage();
 
-            // BufferedImage'e dönüştürme
+            // Convert to BufferedImage
             BufferedImage bufferedImage = new BufferedImage(
                     img.getWidth(null),
                     img.getHeight(null),
@@ -1112,7 +1112,7 @@ public class innerAppPanel {
             g2d.drawImage(img, 0, 0, null);
             g2d.dispose();
 
-            // Resmi dosyaya yaz
+            // Write the image to the file
             ImageIO.write(bufferedImage, "png", destFile);
             JOptionPane.showMessageDialog(null, "Image successfully saved as " + fileName);
         } else {
@@ -1121,43 +1121,43 @@ public class innerAppPanel {
     }
     public void rentVehicle(int userId, String address, int vehicleId, int daysBetween, JTextField feeField, JPanel parentPanel) {
 
-        String insertSQL = "CALL vehicle_rent(?, ?, ?, ?, ?)";  // Prosedür çağrısı
+        String insertSQL = "CALL vehicle_rent(?, ?, ?, ?, ?)";  // Procedure call
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(insertSQL)) {
 
-            // Kullanıcıdan alınan bilgileri prosedüre geçiyoruz
-            stmt.setInt(1, userId);  // Kullanıcı ID
-            stmt.setString(2, address);  // Kullanıcı adresi
-            stmt.setInt(3, vehicleId);  // Araç ID
-            stmt.setInt(4, daysBetween);  // Kiralama süresi (gün olarak)
-            stmt.setInt(5, Integer.parseInt(feeField.getText()));  // Kiralama ücreti
+            // Pass the user-supplied values to the procedure
+            stmt.setInt(1, userId);  // User ID
+            stmt.setString(2, address);  // User address
+            stmt.setInt(3, vehicleId);  // Vehicle ID
+            stmt.setInt(4, daysBetween);  // Rental duration (in days)
+            stmt.setInt(5, Integer.parseInt(feeField.getText()));  // Rental fee
 
-            // Prosedürü çalıştır
+            // Execute the procedure
             stmt.executeUpdate();
 
-            // Başarılı işlem mesajı
-            JOptionPane.showMessageDialog(parentPanel, "Araç başarıyla kiralandı!");
+            // Success message
+            JOptionPane.showMessageDialog(parentPanel, "Vehicle rented successfully!");
 
         } catch (SQLException ex) {
-            ex.printStackTrace();  // Hata detaylarını yazdır
-            JOptionPane.showMessageDialog(parentPanel, "Veritabanı hatası: " + ex.getMessage(), "Hata", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();  // Print the error details
+            JOptionPane.showMessageDialog(parentPanel, "Database error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (NumberFormatException nfe) {
-            JOptionPane.showMessageDialog(parentPanel, "Ücret alanı geçerli bir sayı olmalıdır!", "Hata", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(parentPanel, "The fee field must be a valid number!", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     public static int calculateDaysBetween(String inputDate, String dateFormat) {
         SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
-        sdf.setLenient(false); // Tarih formatının kesinliğini sağlar
+        sdf.setLenient(false); // Enforces strict date parsing
         try {
-            // Kullanıcının girdiği tarihi ve sistem tarihini al
+            // Get the date entered by the user and the system date
             Date enteredDate = sdf.parse(inputDate);
-            Date currentDate = new Date(); // Sistem tarihi
+            Date currentDate = new Date(); // System date
 
-            // Milisaniye cinsinden farkı hesapla
+            // Calculate the difference in milliseconds
             long differenceInMillis = enteredDate.getTime() - currentDate.getTime();
 
-            // Gün cinsinden farkı hesapla
+            // Calculate the difference in days
             return (int) (differenceInMillis / (1000 * 60 * 60 * 24) +1);
         } catch (ParseException e) {
             throw new RuntimeException("Invalid date format. Please use " + dateFormat, e);
@@ -1166,22 +1166,22 @@ public class innerAppPanel {
     private void setupFormattedFields() {
         try {
 
-            // Kart Numarası (16 haneli)
+            // Card Number (16 digits)
             MaskFormatter cardNumberFormatter = new MaskFormatter("####-####-####-####");
             cardNumberFormatter.setPlaceholderCharacter('_');
             cardNumberFormatter.install(cardNumberField);
 
-            // Kart Tarihi (MM/YY)
+            // Card Expiry Date (MM/YY)
             MaskFormatter cardDateFormatter = new MaskFormatter("##/##");
             cardDateFormatter.setPlaceholderCharacter('_');
             cardDateFormatter.install(cardDateField);
 
-            // Kart CVC (3 haneli)
+            // Card CVC (3 digits)
             MaskFormatter cardCvcFormatter = new MaskFormatter("###");
             cardCvcFormatter.setPlaceholderCharacter('_');
             cardCvcFormatter.install(cardCvcField);
 
-            // Araç İade Tarihi (DD/MM/YYYY)
+            // Vehicle Return Date (DD/MM/YYYY)
             MaskFormatter vehicleReturnFormatter = new MaskFormatter("##/##/####");
             vehicleReturnFormatter.setPlaceholderCharacter('_');
             vehicleReturnFormatter.install(vehicleReturnField);
@@ -1192,7 +1192,7 @@ public class innerAppPanel {
     }
     public void toggleAdminMode(boolean enable) {
         if (enable) {
-            // Admin moduna geçiş
+            // Switch to admin mode
             carContractButton.setVisible(false);
             motoContractButton.setVisible(false);
             suvContractButton.setVisible(false);
@@ -1208,7 +1208,7 @@ public class innerAppPanel {
             adminContractTable.setVisible(true);
             adminPanelButton.setVisible(true);
         } else {
-            // Admin modundan çıkış
+            // Exit admin mode
             carContractButton.setVisible(true);
             motoContractButton.setVisible(true);
             suvContractButton.setVisible(true);
@@ -1227,75 +1227,75 @@ public class innerAppPanel {
             adminContractTable.setVisible(false);
             adminPanelButton.setVisible(false);
         }
-    }// Admin modunu kontrol eden metot
+    }// Method that toggles admin mode
     private void vehicle_return(int userId, int vehicleId) {
         String callProcedureSQL = "CALL return_vehicle(?, ?)";
 
         try (Connection conn = createConnection();
              PreparedStatement stmt = conn.prepareStatement(callProcedureSQL)) {
 
-            // Prosedüre parametreleri aktar
+            // Pass the parameters to the procedure
             stmt.setInt(1, userId);
             stmt.setInt(2, vehicleId);
 
-            // Prosedürü çalıştır
+            // Execute the procedure
             stmt.execute();
 
-            // Kullanıcıya başarı mesajı göster
-            JOptionPane.showMessageDialog(null, "Araç başarıyla iade edildi.");
+            // Show the user a success message
+            JOptionPane.showMessageDialog(null, "Vehicle returned successfully.");
 
         } catch (SQLException e) {
-            // Hata durumunda kullanıcıyı bilgilendir
+            // Notify the user on error
             JOptionPane.showMessageDialog(null,
-                    "Bir hata oluştu: " + e.getMessage(),
-                    "İade Hatası", JOptionPane.ERROR_MESSAGE);
+                    "An error occurred: " + e.getMessage(),
+                    "Return Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }
     private void updateJeepPanel() {
-        // Veritabanından Jeep listesini güncelle
+        // Refresh the Jeep list from the database
         jeepList = jeep.getAllJeeps();
 
-        suvPanel.removeAll();  // Mevcut elemanları temizle
-        suvPanel.setLayout(new GridLayout(0, 2, 10, 10));  // 2 sütunlu bir GridLayout oluştur
+        suvPanel.removeAll();  // Clear existing components
+        suvPanel.setLayout(new GridLayout(0, 2, 10, 10));  // Create a 2-column GridLayout
 
         for (Jeep vehicle : jeepList) {
-            if (vehicle != null) {  // Null kontrolü
-                JPanel singleVehiclePanel = new JPanel(new BorderLayout());  // Her araç için ayrı panel
+            if (vehicle != null) {  // Null check
+                JPanel singleVehiclePanel = new JPanel(new BorderLayout());  // Separate panel for each vehicle
                 singleVehiclePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                singleVehiclePanel.setBackground(new Color(214, 240, 247));  // Arka plan rengi
+                singleVehiclePanel.setBackground(new Color(214, 240, 247));  // Background color
 
-                // Jeep ID'sini al
+                // Get the Jeep ID
                 int vehicleId = vehicle.getId();
                 String imageFileName = String.format("images/vehicles_%d.png", vehicleId);
 
-                // Resmi kontrol et ve yükle
+                // Check for and load the image
                 ImageIcon vehicleImageIcon;
                 File imageFile = new File(imageFileName);
                 if (imageFile.exists()) {
                     vehicleImageIcon = new ImageIcon(new ImageIcon(imageFileName)
                             .getImage()
-                            .getScaledInstance(150, 100, Image.SCALE_SMOOTH));  // Daha küçük ölçeklendirme
+                            .getScaledInstance(150, 100, Image.SCALE_SMOOTH));  // Smaller scaling
                 } else {
-                    // Varsayılan bir resim yükle
+                    // Load a default image
                     vehicleImageIcon = new ImageIcon(new ImageIcon("images/default_jeep.png")
                             .getImage()
                             .getScaledInstance(150, 100, Image.SCALE_SMOOTH));
                 }
 
-                // Resim etiketi
+                // Image label
                 JLabel vehicleImageLabel = new JLabel(vehicleImageIcon);
 
-                // Araç bilgisi etiketi
+                // Vehicle info label
                 JLabel vehicleInfoLabel = new JLabel(
                         "<html>Make: " + vehicle.getMake() +
                                 "<br>Serial: " + vehicle.getSerial() +
                                 "<br>Price: " + vehicle.getPrice() + "</html>"
                 );
-                vehicleInfoLabel.setHorizontalAlignment(SwingConstants.CENTER);  // Metni ortala
+                vehicleInfoLabel.setHorizontalAlignment(SwingConstants.CENTER);  // Center the text
                 vehicleInfoLabel.setForeground(Color.BLACK);
 
-                // Detay butonu
+                // Details button
                 JButton detailsButton = new JButton("Show Details");
                 detailsButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 detailsButton.setBackground(background);
@@ -1307,10 +1307,10 @@ public class innerAppPanel {
                     vehicleParentPanel.revalidate();
                     vehicleParentPanel.repaint();
 
-                    // Dosya adını dinamik oluştur
+                    // Build the file name dynamically
                     String fileName = String.format("images/vehicles_%d.png", vehicleId);
 
-                    // Büyük resim ölçeklendirme
+                    // Large image scaling
                     ImageIcon jeepImage;
                     File largeImageFile = new File(fileName);
                     if (largeImageFile.exists()) {
@@ -1324,7 +1324,7 @@ public class innerAppPanel {
                     }
                     suvbigInfo.setIcon(jeepImage);
 
-                    // Küçük resim ölçeklendirme
+                    // Small image scaling
                     ImageIcon smallImage;
                     if (largeImageFile.exists()) {
                         smallImage = new ImageIcon(new ImageIcon(fileName)
@@ -1341,39 +1341,39 @@ public class innerAppPanel {
                             "<br>Serial: " + vehicle.getSerial() +
                             "<br>Price: " + vehicle.getPrice() + "</html>");
 
-                    currentVehicleId = vehicleId;  // Güncel ID'yi güncelle
+                    currentVehicleId = vehicleId;  // Update the current ID
                     updateJeepInfoPanel(jeep.getJeepById(currentVehicleId));
                 });
 
-                // Panel düzenlemesi: Resim üstte, bilgi ortada, buton altta
-                singleVehiclePanel.add(vehicleImageLabel, BorderLayout.WEST);  // Resmi üstte göster
-                singleVehiclePanel.add(vehicleInfoLabel, BorderLayout.CENTER); // Bilgileri ortada göster
-                singleVehiclePanel.add(detailsButton, BorderLayout.SOUTH);     // Butonu altta göster
+                // Panel layout: image on top, info in the middle, button at the bottom
+                singleVehiclePanel.add(vehicleImageLabel, BorderLayout.WEST);  // Show the image on top
+                singleVehiclePanel.add(vehicleInfoLabel, BorderLayout.CENTER); // Show the info in the middle
+                singleVehiclePanel.add(detailsButton, BorderLayout.SOUTH);     // Show the button at the bottom
 
-                suvPanel.add(singleVehiclePanel);  // Ana panele ekle
+                suvPanel.add(singleVehiclePanel);  // Add to the main panel
             }
         }
-        // Paneli yeniden çiz
+        // Repaint the panel
         suvPanel.revalidate();
         suvPanel.repaint();
     }
     private void updateMotoPanel() {
-        // motorList'i veritabanından güncelle
-        motorList = motorcycle.getAllMotorcycles(); // Tüm motosikletleri yeniden yükleyin
+        // Refresh motorList from the database
+        motorList = motorcycle.getAllMotorcycles(); // Reload all motorcycles
 
-        motorcyclePanel.removeAll();  // Mevcut elemanları temizle
-        motorcyclePanel.setLayout(new GridLayout(0, 2, 10, 10));  // 2 sütunlu bir GridLayout oluştur
+        motorcyclePanel.removeAll();  // Clear existing components
+        motorcyclePanel.setLayout(new GridLayout(0, 2, 10, 10));  // Create a 2-column GridLayout
 
         for (Motorcycle vehicle : motorList) {
-            if (vehicle != null) {  // Null kontrolü
+            if (vehicle != null) {  // Null check
                 JPanel singleMotoPanel = new JPanel(new BorderLayout());
                 singleMotoPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                 singleMotoPanel.setBackground(new Color(214, 240, 247));
 
-                int vehicleId = vehicle.getId(); // ID'yi doğrudan al
+                int vehicleId = vehicle.getId(); // Get the ID directly
                 String imageFileName = String.format("images/vehicles_%d.png", vehicleId);
 
-                // Yeni eklenen araç için resim dosyasını kontrol et
+                // Check for the image file of the newly added vehicle
                 ImageIcon vehicleImageIcon = null;
                 File imageFile = new File(imageFileName);
                 if (imageFile.exists()) {
@@ -1381,7 +1381,7 @@ public class innerAppPanel {
                             .getImage()
                             .getScaledInstance(150, 100, Image.SCALE_SMOOTH));
                 } else {
-                    // Varsayılan resim kullan
+                    // Use the default image
                     vehicleImageIcon = new ImageIcon(new ImageIcon("images/default_motorcycle.png")
                             .getImage()
                             .getScaledInstance(150, 100, Image.SCALE_SMOOTH));
@@ -1425,7 +1425,7 @@ public class innerAppPanel {
                             "<br>Model: " + vehicle.getModel() +
                             "<br>Price: " + vehicle.getPrice() + "</html>");
 
-                    currentVehicleId = vehicleId;  // Güncel ID'yi güncelle
+                    currentVehicleId = vehicleId;  // Update the current ID
                     updateMotorcycleInfoPanel(motorcycle.getMotorcycleById(currentVehicleId));
                 });
 
@@ -1437,34 +1437,34 @@ public class innerAppPanel {
             }
         }
 
-        motorcyclePanel.revalidate(); // Layout'u yeniden düzenle
-        motorcyclePanel.repaint();   // Paneli yeniden boyayarak görünümü güncelle
+        motorcyclePanel.revalidate(); // Recalculate the layout
+        motorcyclePanel.repaint();   // Repaint the panel to refresh the view
     }
     private void updateCarPanel() {
-        // Veritabanından araç listesini güncelle
+        // Refresh the vehicle list from the database
         carList = car.getAllCars();
 
-        carPanel.removeAll();  // Mevcut elemanları temizle
-        carPanel.setLayout(new GridLayout(0, 2, 10, 10));  // 2 sütunlu bir GridLayout oluştur
+        carPanel.removeAll();  // Clear existing components
+        carPanel.setLayout(new GridLayout(0, 2, 10, 10));  // Create a 2-column GridLayout
 
         for (Car vehicle : carList) {
-            if (vehicle != null) {  // Null kontrolü
-                JPanel singleCarPanel = new JPanel(new BorderLayout());  // Her araç için ayrı panel
+            if (vehicle != null) {  // Null check
+                JPanel singleCarPanel = new JPanel(new BorderLayout());  // Separate panel for each vehicle
                 singleCarPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                singleCarPanel.setBackground(new Color(214, 240, 247));  // Arka plan rengi
+                singleCarPanel.setBackground(new Color(214, 240, 247));  // Background color
 
-                int vehicleId = vehicle.getId(); // ID'yi doğrudan al
+                int vehicleId = vehicle.getId(); // Get the ID directly
                 String imageFileName = String.format("images/vehicles_%d.png", vehicleId);
 
-                // Resmi yükle ve kontrol et
+                // Load and check the image
                 ImageIcon vehicleImageIcon;
                 File imageFile = new File(imageFileName);
                 if (imageFile.exists()) {
                     vehicleImageIcon = new ImageIcon(new ImageIcon(imageFileName)
                             .getImage()
-                            .getScaledInstance(150, 100, Image.SCALE_SMOOTH));  // Daha küçük ölçeklendirme
+                            .getScaledInstance(150, 100, Image.SCALE_SMOOTH));  // Smaller scaling
                 } else {
-                    // Varsayılan bir resim yükle
+                    // Load a default image
                     vehicleImageIcon = new ImageIcon(new ImageIcon("images/default_car.png")
                             .getImage()
                             .getScaledInstance(150, 100, Image.SCALE_SMOOTH));
@@ -1477,7 +1477,7 @@ public class innerAppPanel {
                                 "<br>Serial: " + vehicle.getSerial() +
                                 "<br>Price: " + vehicle.getPrice() + "</html>"
                 );
-                vehicleInfoLabel.setHorizontalAlignment(SwingConstants.CENTER);  // Metni ortala
+                vehicleInfoLabel.setHorizontalAlignment(SwingConstants.CENTER);  // Center the text
                 vehicleInfoLabel.setForeground(Color.BLACK);
 
                 JButton detailsButton = new JButton("Show Details");
@@ -1493,13 +1493,13 @@ public class innerAppPanel {
 
                     String fileName = String.format("images/vehicles_%d.png", vehicleId);
 
-                    // Büyük resmi yükle ve kontrol et
+                    // Load and check the large image
                     ImageIcon carImage;
                     File largeImageFile = new File(fileName);
                     if (largeImageFile.exists()) {
                         carImage = new ImageIcon(new ImageIcon(fileName)
                                 .getImage()
-                                .getScaledInstance(450, 300, Image.SCALE_SMOOTH));  // Büyük resim ölçeklendirme
+                                .getScaledInstance(450, 300, Image.SCALE_SMOOTH));  // Large image scaling
                     } else {
                         carImage = new ImageIcon(new ImageIcon("images/default_car.png")
                                 .getImage()
@@ -1507,7 +1507,7 @@ public class innerAppPanel {
                     }
                     carbigInfo.setIcon(carImage);
 
-                    // Küçük resmi yükle ve kontrol et
+                    // Load and check the small image
                     ImageIcon smallImage;
                     if (largeImageFile.exists()) {
                         smallImage = new ImageIcon(new ImageIcon(fileName)
@@ -1524,19 +1524,19 @@ public class innerAppPanel {
                             "<br>Serial: " + vehicle.getSerial() +
                             "<br>Price: " + vehicle.getPrice() + "</html>");
 
-                    currentVehicleId = vehicleId;  // Güncel ID'yi güncelle
+                    currentVehicleId = vehicleId;  // Update the current ID
                     updateCarInfoPanel(car.getCarById(currentVehicleId));
                 });
 
-                singleCarPanel.add(vehicleImageLabel, BorderLayout.WEST);  // Resmi sol tarafa yerleştir
-                singleCarPanel.add(vehicleInfoLabel, BorderLayout.CENTER); // Bilgileri ortada göster
-                singleCarPanel.add(detailsButton, BorderLayout.SOUTH);     // Butonu altta göster
+                singleCarPanel.add(vehicleImageLabel, BorderLayout.WEST);  // Place the image on the left
+                singleCarPanel.add(vehicleInfoLabel, BorderLayout.CENTER); // Show the info in the middle
+                singleCarPanel.add(detailsButton, BorderLayout.SOUTH);     // Show the button at the bottom
 
-                carPanel.add(singleCarPanel);  // Ana panele ekle
+                carPanel.add(singleCarPanel);  // Add to the main panel
             }
         }
 
-        // Paneli yeniden çiz
+        // Repaint the panel
         carPanel.revalidate();
         carPanel.repaint();
     }
@@ -1554,7 +1554,7 @@ public class innerAppPanel {
             carModelprivate.setText(car.getModel());
             carStockPrivate.setText(String.valueOf(car.getStock()));
         } else {
-            JOptionPane.showMessageDialog(null, "Araç bilgisi bulunamadı!");
+            JOptionPane.showMessageDialog(null, "Vehicle information not found!");
         }
     }
     public void updateMotorcycleInfoPanel(Motorcycle motorcycle) {
@@ -1572,7 +1572,7 @@ public class innerAppPanel {
             motoColorPrivate.setText(motorcycle.getColor());
             motoStockPrivate.setText(String.valueOf(motorcycle.getStock()));
         } else {
-            JOptionPane.showMessageDialog(null, "Motosiklet bilgisi bulunamadı!");
+            JOptionPane.showMessageDialog(null, "Motorcycle information not found!");
         }
     }
     public void updateJeepInfoPanel(Jeep jeep) {
@@ -1590,7 +1590,7 @@ public class innerAppPanel {
             suvEngineP.setText(jeep.getEnginePower());
             suvStockP.setText(String.valueOf(jeep.getStock()));
         } else {
-            JOptionPane.showMessageDialog(null, "SUV bilgisi bulunamadı!");
+            JOptionPane.showMessageDialog(null, "SUV information not found!");
         }
     }
     public Connection createConnection() throws SQLException {
@@ -1598,36 +1598,36 @@ public class innerAppPanel {
     }
     public int getLastId(String tableName) {
         String selectSQL = "SELECT MAX(id) AS max_id FROM " + tableName + ";";
-        int lastId = -1;  // Default değer, sorgudan değer gelmezse veya hata oluşursa
+        int lastId = -1;  // Default value if the query returns nothing or an error occurs
 
         try (Connection conn = createConnection();
              PreparedStatement stmt = conn.prepareStatement(selectSQL)) {
 
             ResultSet rs = stmt.executeQuery();
 
-            if (rs.next()) {  // Eğer sonuç dönerse
-                lastId = rs.getInt("max_id");  // max_id sütunundaki değeri al
+            if (rs.next()) {  // If a result is returned
+                lastId = rs.getInt("max_id");  // Get the value of the max_id column
             }
 
         } catch (SQLException e) {
             System.out.println("Error while fetching last ID from " + tableName + ": " + e.getMessage());
-            lastId = -1;  // Hata durumunda default değer
+            lastId = -1;  // Default value on error
         }
 
-        return lastId;  // Sonucu geri döndür
+        return lastId;  // Return the result
     }
     public static TableModel getRentedVehicleTable(int userId) {
-        // Veritabanı bağlantısı için gerekli bilgiler
-        // Veritabanına bağlantı kuruyoruz
+        // Information required for the database connection
+        // Connect to the database
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD)) {
 
-            // Kullanıcıya göre kiralanmış araçları almak için SQL sorgusu
+            // SQL query to fetch the vehicles rented by the user
             String query = "SELECT * FROM get_rented_vehicles_by_user(?);";
 
-            // DefaultTableModel, verileri JTable için model olarak tutacak
+            // DefaultTableModel holds the data as the model for the JTable
             DefaultTableModel tableModel = new DefaultTableModel();
 
-            // Tablo başlıklarını tanımlıyoruz
+            // Define the table headers
             tableModel.addColumn("Id");
             tableModel.addColumn("Make");
             tableModel.addColumn("Model");
@@ -1635,55 +1635,55 @@ public class innerAppPanel {
             tableModel.addColumn("Purchase Date");
             tableModel.addColumn("Return Date");
 
-            // JTable nesnesi
+            // JTable object
             JTable rentedVehicleTable = new JTable(tableModel);
 
-            // Tablo başlıklarını siyah yapmak için
+            // Make the table headers black
             JTableHeader tableHeader = rentedVehicleTable.getTableHeader();
-            tableHeader.setForeground(Color.BLACK); // Başlıkları siyah yapıyoruz
+            tableHeader.setForeground(Color.BLACK); // Set the headers to black
 
-            // İlgili sorguyu hazırlıyoruz
+            // Prepare the query
             try (PreparedStatement stmt = conn.prepareStatement(query)) {
                 stmt.setInt(1, userId);
 
-                // Sorguyu çalıştırıyoruz
+                // Execute the query
                 try (ResultSet rs = stmt.executeQuery()) {
-                    // ResultSet'teki verileri alıp tablo modeline ekliyoruz
+                    // Read the rows from the ResultSet and add them to the table model
                     while (rs.next()) {
-                        Object[] row = new Object[6]; // Sadece 5 kolon var
+                        Object[] row = new Object[6]; // Only 5 columns
                         row[0] = rs.getString("vehicle_id");
-                        row[1] = rs.getString("make");  // Aracın markası
-                        row[2] = rs.getString("model");  // Aracın modeli
-                        row[3] = rs.getInt("fee");      // Kira ücreti
-                        row[4] = rs.getDate("purchase_date"); // Satın alma tarihi
-                        row[5] = rs.getDate("return_date");   // İade tarihi
-                        // Satırı tabloya ekliyoruz
+                        row[1] = rs.getString("make");  // Vehicle make
+                        row[2] = rs.getString("model");  // Vehicle model
+                        row[3] = rs.getInt("fee");      // Rental fee
+                        row[4] = rs.getDate("purchase_date"); // Purchase date
+                        row[5] = rs.getDate("return_date");   // Return date
+                        // Add the row to the table
                         tableModel.addRow(row);
                     }
                 }
             } catch (SQLException ex) {
                 ex.printStackTrace();
-                JOptionPane.showMessageDialog(null, "Veritabanı hatası: " + ex.getMessage());
+                JOptionPane.showMessageDialog(null, "Database error: " + ex.getMessage());
             }
 
             return tableModel;
 
         } catch (SQLException ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Veritabanı hatası: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Database error: " + ex.getMessage());
             return null;
         }
     }
     public static TableModel getAllRentedVehiclesTable() {
-        // Veritabanı bağlantısı için gerekli bilgiler
+        // Information required for the database connection
 
-        // SQL sorgusu
+        // SQL query
         String query = "SELECT * FROM get_all_rented_vehicles();";
 
-        // DefaultTableModel, verileri JTable için model olarak tutacak
+        // DefaultTableModel holds the data as the model for the JTable
         DefaultTableModel tableModel = new DefaultTableModel();
 
-        // Tablo başlıklarını tanımlıyoruz
+        // Define the table headers
 
         tableModel.addColumn("User ID");
         tableModel.addColumn("Address");
@@ -1692,32 +1692,32 @@ public class innerAppPanel {
         tableModel.addColumn("Vehicle ID");
         tableModel.addColumn("Fee");
 
-        // Veritabanına bağlantı kuruyoruz
+        // Connect to the database
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
 
-            // Verileri alıp tablo modeline ekliyoruz
+            // Read the data and add it to the table model
             while (rs.next()) {
                 Object[] row = new Object[6];
 
-                row[0] = rs.getInt("user_id"); // Kullanıcı ID'si
-                row[1] = rs.getString("address"); // Kullanıcı adresi
-                row[2] = rs.getDate("purchase_date"); // Satın alma tarihi
-                row[3] = rs.getDate("return_date"); // İade tarihi
-                row[4] = rs.getInt("vehicle_id"); // Araç ID'si
-                row[5] = rs.getInt("fee"); // Ücret
+                row[0] = rs.getInt("user_id"); // User ID
+                row[1] = rs.getString("address"); // User address
+                row[2] = rs.getDate("purchase_date"); // Purchase date
+                row[3] = rs.getDate("return_date"); // Return date
+                row[4] = rs.getInt("vehicle_id"); // Vehicle ID
+                row[5] = rs.getInt("fee"); // Fee
 
-                // Satırı tabloya ekliyoruz
+                // Add the row to the table
                 tableModel.addRow(row);
             }
 
         } catch (SQLException ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Veritabanı hatası: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Database error: " + ex.getMessage());
         }
 
-        return tableModel; // Sadece TableModel döndürülüyor
+        return tableModel; // Only the TableModel is returned
     }
     private void createUIComponents() {
         phoneLogo = new JLabel();
@@ -1759,5 +1759,5 @@ public class innerAppPanel {
         ppLabel = new JLabel();
         ImageIcon ppIcon = new ImageIcon(new  ImageIcon("images/Pp.png").getImage().getScaledInstance(200,200,Image.SCALE_SMOOTH));
         ppLabel.setIcon(ppIcon);
-    }//Kullandığımız pngler burann içinde
+    }//The PNGs we use are loaded here
 }
