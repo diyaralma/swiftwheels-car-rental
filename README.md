@@ -71,3 +71,7 @@ The full schema, including tables, procedures, functions and triggers, is in [`S
 ├── images/                        # UI assets and default vehicle images
 └── SQL_Commands.txt               # Database schema, procedures, functions, triggers
 ```
+
+## License
+
+[MIT](LICENSE)
